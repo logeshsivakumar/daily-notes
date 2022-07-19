@@ -36,6 +36,17 @@ class LoginProvider  {
    }
    return "";
  }
-
-
-}
+ Future resetPassword(String resetEmail,BuildContext context) async{
+   showDialog(context: context,barrierDismissible: false, builder: (context)=>const Center(child: CircularProgressIndicator(),));
+   try{
+     await _firebaseAuth.sendPasswordResetEmail(email: resetEmail);
+     Utils.showSnackBar("Password reset Email sent");
+     navigatorKey.currentState!.popUntil((route) => route.isFirst);
+     return "Success";
+   }on FirebaseAuthException catch(e){
+     Utils.showSnackBar(e.message);
+     Navigator.of(context).pop();
+   }
+   return "";
+ }
+ }
